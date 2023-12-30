@@ -1,0 +1,33 @@
+version: '3.9'
+
+services:
+  mysql_agily_devs:
+    image: mysql:8.0-debian
+    container_name: mysql_agily_devs
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: agily_dev
+    volumes:
+      - data-mysql-agily-dev:/var/lib/mysql
+    restart: always
+    networks:
+      - agily_network
+
+  redis:
+    image: redis
+    container_name: redis
+    ports:
+      - "6379:6379"
+    restart: always
+    networks:
+      - agily_network
+
+
+volumes:
+  data-mysql-agily-dev:
+
+networks:
+  agily_network:
+    driver: bridge
