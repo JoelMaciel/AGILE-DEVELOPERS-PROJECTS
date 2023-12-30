@@ -13,9 +13,9 @@
 
 ## Technology used :
 -  JAVA --- SPRING BOOT.
--  D0CKER --- AMAZON AWS --- ECS ]
+-  D0CKER --- AMAZON AWS --- ECS --- ECR --- EC2]
 -  CI/CD ---  GITHUB ACTIONS
--  OPEN API , SWAGGER , HATEOAS
--  MYSQL, FLYWAY
+-  OPEN API --- SWAGGER --- HATEOAS
+-  MYSQL --- FLYWAY
 
 ## Request Images
