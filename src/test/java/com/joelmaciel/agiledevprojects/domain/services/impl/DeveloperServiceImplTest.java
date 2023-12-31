@@ -5,6 +5,7 @@ import com.joelmaciel.agiledevprojects.api.dtos.DeveloperRequest;
 import com.joelmaciel.agiledevprojects.domain.entities.Company;
 import com.joelmaciel.agiledevprojects.domain.entities.Developer;
 import com.joelmaciel.agiledevprojects.domain.enums.ExperienceLevel;
+import com.joelmaciel.agiledevprojects.domain.exception.DeveloperNotFoundException;
 import com.joelmaciel.agiledevprojects.domain.repositories.DeveloperRepository;
 import com.joelmaciel.agiledevprojects.domain.services.CompanyService;
 import jakarta.validation.*;
@@ -15,6 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,6 +27,7 @@ import static org.mockito.Mockito.*;
 class DeveloperServiceImplTest {
 
     public static final String NAME_IS_REQUIRED = "Name is required";
+    public static final String DEVELOPER_NOT_FOUND = "There is no developer with this id 999 saved in the database";
     @Mock
     private CompanyService companyService;
     @Mock
@@ -81,10 +84,54 @@ class DeveloperServiceImplTest {
 
     }
 
+    @Test
+    @DisplayName("Given valid developerId, when finding a developer by id, then return DeveloperDTO successfully")
+    void givenValidDeveloperId_whenFindingDeveloperById_thenReturnDeveloperDTOSuccessfully() {
+        Developer mockDeveloper = getMockDeveloper();
+
+        when(developerRepository.findById(mockDeveloper.getDeveloperId())).thenReturn(Optional.of(mockDeveloper));
+        DeveloperDTO developerDTO = developerService.findById(mockDeveloper.getDeveloperId());
+
+        assertNotNull(developerDTO);
+        assertEquals(mockDeveloper.getDeveloperId(), developerDTO.getDeveloperId());
+        assertEquals(mockDeveloper.getName(), developerDTO.getName());
+        assertEquals(mockDeveloper.getPosition(), developerDTO.getPosition());
+        assertEquals(mockDeveloper.getAge(), developerDTO.getAge());
+        verify(developerRepository, times(1)).findById(anyLong());
+    }
+
+    @Test
+    @DisplayName("Given invalid developerId, when finding a developer by id, then throw DeveloperNotFoundException")
+    void givenInvalidDeveloperId_whenFindingDeveloperById_thenThrowDeveloperNotFoundException() {
+        Long invalidDeveloperId = 999L;
+        when(developerRepository.findById(invalidDeveloperId)).thenReturn(Optional.empty());
+
+        DeveloperNotFoundException exception = assertThrows(DeveloperNotFoundException.class,
+                () -> developerService.findById(invalidDeveloperId)
+        );
+
+        assertEquals(exception.getMessage(), DEVELOPER_NOT_FOUND);
+        assertTrue(exception.getMessage().contains(String.valueOf(invalidDeveloperId)));
+        verify(developerRepository, times(1)).findById(invalidDeveloperId);
+    }
+
     private DeveloperRequest getMockDeveloperRequest() {
         return DeveloperRequest.builder()
                 .name("Joel Maciel")
                 .companyId(1L)
+                .experienceLevel(ExperienceLevel.PLENO)
+                .position("FullStack")
+                .yearsOfExperience(8)
+                .phoneNumber("85999898989")
+                .age(35)
+                .build();
+    }
+
+    private Developer getMockDeveloper() {
+        return Developer.builder()
+                .developerId(1L)
+                .name("Joel Maciel")
+                .company(getMockCompany())
                 .experienceLevel(ExperienceLevel.PLENO)
                 .position("FullStack")
                 .yearsOfExperience(8)

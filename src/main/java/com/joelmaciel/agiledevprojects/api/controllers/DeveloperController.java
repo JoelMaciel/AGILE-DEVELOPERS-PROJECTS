@@ -14,6 +14,11 @@ import org.springframework.web.bind.annotation.*;
 public class DeveloperController {
     private final DeveloperService developerService;
 
+    @GetMapping("/{developerId}")
+    public DeveloperDTO getOne(@PathVariable Long developerId) {
+        return developerService.findById(developerId);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public DeveloperDTO save(@RequestBody @Valid DeveloperRequest developerRequest) {
