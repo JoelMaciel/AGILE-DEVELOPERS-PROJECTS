@@ -2,20 +2,17 @@ package com.joelmaciel.agiledevprojects.domain.entities;
 
 import com.joelmaciel.agiledevprojects.domain.enums.ExperienceLevel;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 public class Developer {
-
 
     @Id
     @EqualsAndHashCode.Include
