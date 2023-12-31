@@ -1,8 +1,10 @@
+
 CREATE TABLE company (
     company_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(150) NOT NULL UNIQUE,
     creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
 
 CREATE TABLE developer (
     developer_id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -13,8 +15,9 @@ CREATE TABLE developer (
     experience_level VARCHAR(20) CHECK (experience_level IN ('INTERN', 'JUNIOR', 'PLENO', 'SENIOR')) NOT NULL,
     years_of_experience INT NOT NULL,
     company_id BIGINT NOT NULL,
-    FOREIGN KEY (company_id) REFERENCES company(company_id)
+    FOREIGN KEY (company_id) REFERENCES company(company_id) ON DELETE CASCADE
 );
+
 
 CREATE TABLE project (
     project_id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -23,9 +26,8 @@ CREATE TABLE project (
     company_id BIGINT NOT NULL,
     creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     update_date TIMESTAMP,
-    FOREIGN KEY (company_id) REFERENCES company(company_id)
+    FOREIGN KEY (company_id) REFERENCES company(company_id) ON DELETE CASCADE
 );
-
 
 
 CREATE TABLE task (
@@ -38,6 +40,6 @@ CREATE TABLE task (
     deadline_days INT,
     creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     update_date TIMESTAMP,
-    FOREIGN KEY (developer_id) REFERENCES developer(developer_id),
-    FOREIGN KEY (project_id) REFERENCES project(project_id)
+    FOREIGN KEY (developer_id) REFERENCES developer(developer_id) ON DELETE CASCADE,
+    FOREIGN KEY (project_id) REFERENCES project(project_id) ON DELETE CASCADE
 );

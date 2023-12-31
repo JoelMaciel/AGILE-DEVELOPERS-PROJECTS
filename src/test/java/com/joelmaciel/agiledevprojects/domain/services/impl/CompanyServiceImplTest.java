@@ -95,7 +95,6 @@ class CompanyServiceImplTest {
 
     }
 
-
     @DisplayName("Given a CompanyRequest without a name, when saving a company, then an exception is thrown")
     @Test
     void givenCompanyRequestWithoutName_whenSavingCompany_thenExceptionIsThrown() {
@@ -149,6 +148,37 @@ class CompanyServiceImplTest {
 
         assertEquals(COMPANY_NOT_FOUND, exception.getMessage());
         verify(companyRepository, times(1)).findById(invalidCompanyId);
+
+    }
+
+    @Test
+    @DisplayName("Given a valid companyId, when deleting a company, then it should delete successfully")
+    void givenValidCompanyId_whenDeletingCompany_thenDeleteSuccessfully() {
+        Company company = getMockCompany();
+
+        when(companyRepository.findById(company.getCompanyId())).thenReturn(Optional.of(company));
+
+        assertDoesNotThrow(() -> companyService.delete(company.getCompanyId()));
+        verify(companyRepository, times(1)).findById(company.getCompanyId());
+        verify(companyRepository, times(1)).delete(company);
+
+    }
+
+
+    @Test
+    @DisplayName("Given an invalid companyId, when deleting a company, then throw CompanyNotFoundException")
+    void givenInvalidCompanyId_whenDeletingCompany_thenThrowCompanyNotFoundException() {
+        Long companyId = 999L;
+
+        when(companyRepository.findById(companyId)).thenReturn(Optional.empty());
+
+        CompanyNotFoundException exception = assertThrows(
+                CompanyNotFoundException.class,
+                () -> companyService.delete(companyId));
+
+        assertEquals(CompanyServiceImplTest.COMPANY_NOT_FOUND, exception.getMessage());
+        verify(companyRepository, times(1)).findById(companyId);
+        verify(companyRepository, never()).delete(any(Company.class));
 
     }
 

@@ -45,6 +45,13 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
+    @Transactional
+    public void delete(Long companyId) {
+        Company company = findByCompanyId(companyId);
+        companyRepository.delete(company);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public Company findByCompanyId(Long companyId) {
         return companyRepository.findById(companyId)

@@ -14,4 +14,6 @@ public interface CompanyService {
     Company findByCompanyId(Long companyId);
 
     Page<CompanyDTO> findAll(Pageable pageable, String name);
+
+    void delete(Long companyId);
 }

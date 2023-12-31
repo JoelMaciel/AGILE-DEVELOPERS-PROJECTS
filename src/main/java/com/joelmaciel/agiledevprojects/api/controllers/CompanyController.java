@@ -37,4 +37,10 @@ public class CompanyController {
     public CompanyDTO save(@RequestBody @Valid CompanyRequest companyRequest) {
         return companyService.save(companyRequest);
     }
+
+    @DeleteMapping("/{companyId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long companyId) {
+        companyService.delete(companyId);
+    }
 }
