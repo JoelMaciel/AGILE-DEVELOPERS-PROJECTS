@@ -18,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-class Project {
+public class Project {
 
     @Id
     @EqualsAndHashCode.Include
