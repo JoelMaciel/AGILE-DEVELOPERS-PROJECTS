@@ -1,7 +1,7 @@
 package com.joelmaciel.agiledevprojects.domain.services.impl;
 
-import com.joelmaciel.agiledevprojects.api.dtos.CompanyDTO;
-import com.joelmaciel.agiledevprojects.api.dtos.CompanyRequest;
+import com.joelmaciel.agiledevprojects.api.dtos.response.CompanyDTO;
+import com.joelmaciel.agiledevprojects.api.dtos.request.CompanyRequest;
 import com.joelmaciel.agiledevprojects.domain.entities.Company;
 import com.joelmaciel.agiledevprojects.domain.exception.CompanyNotFoundException;
 import com.joelmaciel.agiledevprojects.domain.repositories.CompanyRepository;

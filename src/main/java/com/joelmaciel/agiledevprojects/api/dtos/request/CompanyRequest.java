@@ -1,4 +1,4 @@
-package com.joelmaciel.agiledevprojects.api.dtos;
+package com.joelmaciel.agiledevprojects.api.dtos.request;
 
 import com.joelmaciel.agiledevprojects.domain.entities.Company;
 import jakarta.validation.constraints.NotBlank;
