@@ -1,4 +1,4 @@
-package com.joelmaciel.agiledevprojects.api.dtos;
+package com.joelmaciel.agiledevprojects.api.dtos.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.joelmaciel.agiledevprojects.domain.entities.Company;

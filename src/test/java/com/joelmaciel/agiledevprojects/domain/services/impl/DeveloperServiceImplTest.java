@@ -1,7 +1,7 @@
 package com.joelmaciel.agiledevprojects.domain.services.impl;
 
-import com.joelmaciel.agiledevprojects.api.dtos.DeveloperDTO;
-import com.joelmaciel.agiledevprojects.api.dtos.DeveloperRequest;
+import com.joelmaciel.agiledevprojects.api.dtos.response.DeveloperDTO;
+import com.joelmaciel.agiledevprojects.api.dtos.request.DeveloperRequest;
 import com.joelmaciel.agiledevprojects.domain.entities.Company;
 import com.joelmaciel.agiledevprojects.domain.entities.Developer;
 import com.joelmaciel.agiledevprojects.domain.enums.ExperienceLevel;
@@ -59,7 +59,6 @@ class DeveloperServiceImplTest {
         assertEquals(name, developerDTOPage.getContent().get(0).getName());
 
         verify(developerRepository, times(1)).findByNameContaining(pageable, name);
-
     }
 
     @Test
