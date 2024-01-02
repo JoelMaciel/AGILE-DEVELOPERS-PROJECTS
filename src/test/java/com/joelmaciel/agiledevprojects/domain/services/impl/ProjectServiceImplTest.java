@@ -1,6 +1,7 @@
 package com.joelmaciel.agiledevprojects.domain.services.impl;
 
 import com.joelmaciel.agiledevprojects.api.dtos.request.ProjectRequest;
+import com.joelmaciel.agiledevprojects.api.dtos.request.ProjectUpdateRequest;
 import com.joelmaciel.agiledevprojects.api.dtos.response.ProjectDTO;
 import com.joelmaciel.agiledevprojects.domain.entities.Company;
 import com.joelmaciel.agiledevprojects.domain.entities.Project;
@@ -11,10 +12,12 @@ import com.joelmaciel.agiledevprojects.domain.services.CompanyService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.OffsetDateTime;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -86,12 +89,53 @@ class ProjectServiceImplTest {
         verify(projectRepository, times(1)).findById(mockProject.getProjectId());
     }
 
+    @Test
+    @DisplayName("Given valid ProjectId and ProjectUpdateRequest, when updating a project, then return ProjectDTO successfully")
+    void givenValidProjectIdAndProjectUpdateRequest_whenUpdatingProject_thenReturnProjectDTOSuccessfully() {
+        ProjectUpdateRequest mockProjectUpdateRequest = getMockProjectUpdateRequest();
+
+        Project mockProject = getMockProjectWithUpdateRequest(mockProjectUpdateRequest);
+
+        when(projectRepository.findById(mockProject.getProjectId())).thenReturn(Optional.of(mockProject));
+        when(projectRepository.save(any(Project.class))).thenReturn(mockProject);
+
+        ProjectDTO projectDTO = projectService.update(mockProject.getProjectId(), mockProjectUpdateRequest);
+
+        assertNotNull(projectDTO);
+        assertEquals(mockProjectUpdateRequest.getName(), projectDTO.getName());
+        assertEquals(mockProjectUpdateRequest.getStatus(), projectDTO.getStatus());
+
+        verify(projectRepository, times(1)).findById(mockProject.getProjectId());
+        verify(projectRepository, times(1)).save(any(Project.class));
+    }
+
     private ProjectRequest getMockProjectRequest() {
         return ProjectRequest.builder()
                 .name("Sample Project")
                 .status(ProjectStatus.IN_PROGRESS)
                 .companyId(1L)
                 .build();
+    }
+
+    private ProjectUpdateRequest getMockProjectUpdateRequest() {
+        return ProjectUpdateRequest.builder()
+                .name("Updated Project")
+                .status(ProjectStatus.COMPLETED)
+                .build();
+    }
+
+    private Project getMockProjectWithUpdateRequest(ProjectUpdateRequest updateRequest) {
+        Company mockCompany = getMockCompany();
+
+        Project mockProject = getMockProject();
+        mockProject.setCompany(mockCompany);
+
+        mockProject = mockProject.toBuilder()
+                .name(updateRequest.getName())
+                .status(updateRequest.getStatus())
+                .build();
+
+        return mockProject;
     }
 
     private Project getMockProject() {

@@ -1,5 +1,6 @@
 package com.joelmaciel.agiledevprojects.api.controllers;
 
+import com.joelmaciel.agiledevprojects.api.dtos.request.ProjectUpdateRequest;
 import com.joelmaciel.agiledevprojects.api.dtos.response.ProjectDTO;
 import com.joelmaciel.agiledevprojects.api.dtos.request.ProjectRequest;
 import com.joelmaciel.agiledevprojects.domain.services.ProjectService;
@@ -17,6 +18,11 @@ public class ProjectController {
     @GetMapping("/{projectId}")
     public ProjectDTO getOne(@PathVariable Long projectId) {
         return projectService.findById(projectId);
+    }
+
+    @PatchMapping("/{projectId}")
+    public ProjectDTO update(@PathVariable Long projectId, @RequestBody @Valid ProjectUpdateRequest projectUpdateRequest) {
+        return projectService.update(projectId,projectUpdateRequest);
     }
 
     @PostMapping
