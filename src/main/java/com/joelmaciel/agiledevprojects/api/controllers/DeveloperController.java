@@ -1,7 +1,7 @@
 package com.joelmaciel.agiledevprojects.api.controllers;
 
-import com.joelmaciel.agiledevprojects.api.dtos.DeveloperDTO;
-import com.joelmaciel.agiledevprojects.api.dtos.DeveloperRequest;
+import com.joelmaciel.agiledevprojects.api.dtos.response.DeveloperDTO;
+import com.joelmaciel.agiledevprojects.api.dtos.request.DeveloperRequest;
 import com.joelmaciel.agiledevprojects.domain.services.DeveloperService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

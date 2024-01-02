@@ -15,6 +15,7 @@
 -  JAVA --- SPRING BOOT.
 -  DOCKER --- AMAZON AWS --- ECS --- ECR --- EC2]
 -  CI/CD  ---   GITHUB ACTIONS
+-  JUnit5 ---  UNITARY AND INTEGRATION TESTING ----  JACOCO
 -  OPEN API --- SWAGGER --- HATEOAS
 -  MYSQL --- FLYWAY
 
@@ -23,6 +24,10 @@
 ### Migration SQL
 
 ![Captura de tela de 2023-12-31 17-08-46](https://github.com/JoelMaciel/AGILE-DEVELOPERS-PRJECTS/assets/77079093/0ef40c25-68b9-4ca6-8148-c424e65b2536)
+
+### Jacoco Test
+
+![Captura de tela de 2024-01-02 19-35-44](https://github.com/JoelMaciel/AGILE-DEVELOPERS-PRJECTS/assets/77079093/dd6ea534-3c96-4e18-a742-4dbfaf04a14b)
 
 ### Customized messages
 ![Captura de tela de 2023-12-31 17-08-19](https://github.com/JoelMaciel/AGILE-DEVELOPERS-PRJECTS/assets/77079093/05d89b64-542f-472e-979d-2bbc4d0f1a2a)
@@ -40,3 +45,5 @@
 ### Containers Running
 ![Captura de tela de 2023-12-31 17-09-55](https://github.com/JoelMaciel/AGILE-DEVELOPERS-PRJECTS/assets/77079093/f30c9ba2-6304-4638-baaf-a2b435446715)
 
+### Command to run Jacoco
+- mvn clean install jacoco:report
