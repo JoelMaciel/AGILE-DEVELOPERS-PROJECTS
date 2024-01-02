@@ -38,7 +38,6 @@ class DeveloperServiceImplTest {
     private CompanyService companyService;
     @Mock
     private DeveloperRepository developerRepository;
-
     @InjectMocks
     private DeveloperServiceImpl developerService;
 
@@ -94,8 +93,31 @@ class DeveloperServiceImplTest {
         assertNotNull(developerDTOPage);
         assertEquals(1, developerDTOPage.getSize());
         verify(developerRepository, times(1)).findAll(pageable);
+    }
 
+    @Test
+    @DisplayName("Given valid DeveloperRequest, when updating a developer, then return DeveloperDTO successfully")
+    void givenValidDeveloperRequest_whenUpdatingDeveloper_thenReturnDeveloperDTOSuccessfully() {
+        DeveloperRequest mockDeveloperRequest = getMockDeveloperRequest();
+        Developer mockDeveloper = getMockDeveloper();
 
+        mockDeveloper = buildUpdatedDeveloper(mockDeveloper, mockDeveloperRequest);
+
+        when(developerRepository.findById(mockDeveloper.getDeveloperId())).thenReturn(Optional.of(mockDeveloper));
+        when(developerRepository.save(any(Developer.class))).thenReturn(mockDeveloper);
+
+        DeveloperDTO developerDTO = developerService.update(mockDeveloper.getDeveloperId(), mockDeveloperRequest);
+
+        assertNotNull(developerDTO);
+        assertEquals(mockDeveloperRequest.getName(), developerDTO.getName());
+        assertEquals(mockDeveloperRequest.getPhoneNumber(), developerDTO.getPhoneNumber());
+        assertEquals(mockDeveloperRequest.getAge(), developerDTO.getAge());
+        assertEquals(mockDeveloperRequest.getPosition(), developerDTO.getPosition());
+        assertEquals(mockDeveloperRequest.getExperienceLevel(), developerDTO.getExperienceLevel());
+        assertEquals(mockDeveloperRequest.getYearsOfExperience(), developerDTO.getYearsOfExperience());
+
+        verify(developerRepository, times(1)).findById(mockDeveloper.getDeveloperId());
+        verify(developerRepository, times(1)).save(any(Developer.class));
     }
 
     @Test
@@ -142,7 +164,6 @@ class DeveloperServiceImplTest {
         assertTrue(exception.getMessage().contains("Name is required"));
         verify(developerRepository, times(1)).save(any(Developer.class));
         verify(companyService, times(1)).findByCompanyId(anyLong());
-
     }
 
     @Test
@@ -176,15 +197,28 @@ class DeveloperServiceImplTest {
         verify(developerRepository, times(1)).findById(invalidDeveloperId);
     }
 
+    private static Developer buildUpdatedDeveloper(Developer mockDeveloper, DeveloperRequest mockDeveloperRequest) {
+        mockDeveloper = mockDeveloper.toBuilder()
+                .name(mockDeveloperRequest.getName())
+                .phoneNumber(mockDeveloperRequest.getPhoneNumber())
+                .age(mockDeveloperRequest.getAge())
+                .position(mockDeveloperRequest.getPosition())
+                .experienceLevel(mockDeveloperRequest.getExperienceLevel())
+                .yearsOfExperience(mockDeveloperRequest.getYearsOfExperience())
+                .company(mockDeveloper.getCompany())
+                .build();
+        return mockDeveloper;
+    }
+
     private DeveloperRequest getMockDeveloperRequest() {
         return DeveloperRequest.builder()
-                .name("Joel Maciel")
-                .companyId(1L)
-                .experienceLevel(ExperienceLevel.PLENO)
-                .position("FullStack")
-                .yearsOfExperience(8)
-                .phoneNumber("85999898989")
-                .age(35)
+                .name("Maciel Viana")
+                .companyId(2L)
+                .experienceLevel(ExperienceLevel.INTERN)
+                .position("FrontEnd")
+                .yearsOfExperience(1)
+                .phoneNumber("8599777733")
+                .age(21)
                 .build();
     }
 

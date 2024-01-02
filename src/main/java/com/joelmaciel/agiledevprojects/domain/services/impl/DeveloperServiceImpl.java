@@ -4,7 +4,6 @@ import com.joelmaciel.agiledevprojects.api.dtos.DeveloperDTO;
 import com.joelmaciel.agiledevprojects.api.dtos.DeveloperRequest;
 import com.joelmaciel.agiledevprojects.domain.entities.Company;
 import com.joelmaciel.agiledevprojects.domain.entities.Developer;
-import com.joelmaciel.agiledevprojects.domain.enums.ExperienceLevel;
 import com.joelmaciel.agiledevprojects.domain.exception.DeveloperNotFoundException;
 import com.joelmaciel.agiledevprojects.domain.repositories.DeveloperRepository;
 import com.joelmaciel.agiledevprojects.domain.services.CompanyService;
@@ -36,6 +35,15 @@ public class DeveloperServiceImpl implements DeveloperService {
     }
 
     @Override
+    @Transactional
+    public DeveloperDTO update(Long developerId, DeveloperRequest developerRequest) {
+        Developer developer = findByDeveloperId(developerId);
+        Developer updatedDeveloper = mapDeveloperRequestToDeveloper(developerRequest,developer);
+
+        return DeveloperDTO.toDTO(developerRepository.save(updatedDeveloper));
+    }
+
+    @Override
     public DeveloperDTO save(DeveloperRequest developerRequest) {
         Company company = companyService.findByCompanyId(developerRequest.getCompanyId());
         Developer developer = DeveloperRequest.toEntity(developerRequest);
@@ -54,12 +62,14 @@ public class DeveloperServiceImpl implements DeveloperService {
         return developerRepository.findById(developerId)
                 .orElseThrow(() -> new DeveloperNotFoundException(developerId));
     }
-
-    private ExperienceLevel convertToExperienceLevel(String experienceLevel) {
-        try {
-            return ExperienceLevel.valueOf(experienceLevel.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Nível de experiência inválido: " + experienceLevel);
-        }
+    private Developer mapDeveloperRequestToDeveloper(DeveloperRequest developerRequest, Developer developer) {
+        return developer.toBuilder()
+                .name(developerRequest.getName())
+                .phoneNumber(developerRequest.getPhoneNumber())
+                .age(developerRequest.getAge())
+                .position(developerRequest.getPosition())
+                .experienceLevel(developerRequest.getExperienceLevel())
+                .yearsOfExperience(developerRequest.getYearsOfExperience())
+                .build();
     }
 }

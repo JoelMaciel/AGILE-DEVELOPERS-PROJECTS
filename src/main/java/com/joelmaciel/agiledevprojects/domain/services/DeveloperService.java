@@ -14,4 +14,6 @@ public interface DeveloperService {
     Developer findByDeveloperId(Long developerId);
 
     Page<DeveloperDTO> findAll(Pageable pageable, String name, String position);
+
+    DeveloperDTO update(Long developerId, DeveloperRequest developerRequest);
 }

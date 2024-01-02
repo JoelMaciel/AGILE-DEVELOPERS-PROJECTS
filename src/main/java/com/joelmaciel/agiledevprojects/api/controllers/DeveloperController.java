@@ -33,6 +33,11 @@ public class DeveloperController {
         return developerService.findById(developerId);
     }
 
+    @PutMapping("/{developerId}")
+    public DeveloperDTO update(@PathVariable Long developerId, @RequestBody @Valid DeveloperRequest developerRequest) {
+        return developerService.update(developerId, developerRequest);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public DeveloperDTO save(@RequestBody @Valid DeveloperRequest developerRequest) {
