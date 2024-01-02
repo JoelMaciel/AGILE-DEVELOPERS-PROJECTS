@@ -8,14 +8,20 @@ import com.joelmaciel.agiledevprojects.domain.enums.ExperienceLevel;
 import com.joelmaciel.agiledevprojects.domain.exception.DeveloperNotFoundException;
 import com.joelmaciel.agiledevprojects.domain.repositories.DeveloperRepository;
 import com.joelmaciel.agiledevprojects.domain.services.CompanyService;
-import jakarta.validation.*;
+import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -35,6 +41,62 @@ class DeveloperServiceImplTest {
 
     @InjectMocks
     private DeveloperServiceImpl developerService;
+
+    @Test
+    @DisplayName("Given valid DeveloperRequest and pageable, when saving a developer, then return DeveloperDTO successfully")
+    void givenValidDeveloperRequestAndPageable_whenSavingDeveloper_thenReturnDeveloperDTOSuccessfully() {
+        String name = "Joel Maciel";
+        Pageable pageable = PageRequest.of(0, 10);
+
+        Developer mockDeveloper = getMockDeveloper();
+
+        List<Developer> developerList = Collections.singletonList(mockDeveloper);
+        when(developerRepository.findByNameContaining(pageable, name)).thenReturn(new PageImpl<>(developerList));
+
+        Page<DeveloperDTO> developerDTOPage = developerService.findAll(pageable, name, null);
+
+        assertNotNull(developerDTOPage);
+        assertEquals(1, developerDTOPage.getSize());
+        assertEquals(name, developerDTOPage.getContent().get(0).getName());
+
+        verify(developerRepository, times(1)).findByNameContaining(pageable, name);
+
+    }
+
+    @Test
+    @DisplayName("Given position, when finding all developers, then return DeveloperDTOs successfully")
+    void givenPosition_whenFindingAllDevelopers_thenReturnDeveloperDTOSuccessfully() {
+        String position = "FullStack";
+        PageRequest pageable = PageRequest.of(0, 10);
+
+        Developer mockDeveloper = getMockDeveloper();
+        List<Developer> developerList = Collections.singletonList(mockDeveloper);
+
+        when(developerRepository.findByPositionContaining(pageable, position)).thenReturn(new PageImpl<>(developerList));
+
+        Page<DeveloperDTO> developerDTOPage = developerService.findAll(pageable, null, position);
+        assertNotNull(developerDTOPage);
+        assertEquals(position, developerDTOPage.getContent().get(0).getPosition());
+        assertEquals(1, developerDTOPage.getSize());
+    }
+
+    @Test
+    @DisplayName("Given no name or position, when finding all developers, then return DeveloperDTOs successfully")
+    void givenNoNameOrPosition_whenFindingAllDevelopers_thenReturnDeveloperDTOSuccessfully() {
+        PageRequest pageable = PageRequest.of(0, 10);
+        Developer mockDeveloper = getMockDeveloper();
+
+        List<Developer> developerList = Collections.singletonList(mockDeveloper);
+        when(developerRepository.findAll(pageable)).thenReturn(new PageImpl<>(developerList));
+
+        Page<DeveloperDTO> developerDTOPage = developerService.findAll(pageable, null, null);
+
+        assertNotNull(developerDTOPage);
+        assertEquals(1, developerDTOPage.getSize());
+        verify(developerRepository, times(1)).findAll(pageable);
+
+
+    }
 
     @Test
     @DisplayName("Given valid DeveloperRequest, when saving a developer, then return DeveloperDTO successfully")
@@ -59,7 +121,6 @@ class DeveloperServiceImplTest {
         verify(developerRepository, times(1)).save(any(Developer.class));
         verify(companyService, times(1)).findByCompanyId(anyLong());
     }
-
 
     @Test
     @DisplayName("Given DeveloperRequest without a name, when saving a developer, then throw exception")

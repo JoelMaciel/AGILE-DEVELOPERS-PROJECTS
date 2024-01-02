@@ -4,18 +4,36 @@ import com.joelmaciel.agiledevprojects.api.dtos.DeveloperDTO;
 import com.joelmaciel.agiledevprojects.api.dtos.DeveloperRequest;
 import com.joelmaciel.agiledevprojects.domain.entities.Company;
 import com.joelmaciel.agiledevprojects.domain.entities.Developer;
+import com.joelmaciel.agiledevprojects.domain.enums.ExperienceLevel;
 import com.joelmaciel.agiledevprojects.domain.exception.DeveloperNotFoundException;
 import com.joelmaciel.agiledevprojects.domain.repositories.DeveloperRepository;
 import com.joelmaciel.agiledevprojects.domain.services.CompanyService;
 import com.joelmaciel.agiledevprojects.domain.services.DeveloperService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class DeveloperServiceImpl implements DeveloperService {
     private final DeveloperRepository developerRepository;
     private final CompanyService companyService;
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<DeveloperDTO> findAll(Pageable pageable, String name, String position) {
+        Page<Developer> developers;
+        if (name != null) {
+            developers = developerRepository.findByNameContaining(pageable, name);
+        } else if (position != null) {
+            developers = developerRepository.findByPositionContaining(pageable, position);
+        } else {
+            developers = developerRepository.findAll(pageable);
+        }
+        return developers.map(DeveloperDTO::toDTO);
+    }
 
     @Override
     public DeveloperDTO save(DeveloperRequest developerRequest) {
@@ -35,5 +53,13 @@ public class DeveloperServiceImpl implements DeveloperService {
     public Developer findByDeveloperId(Long developerId) {
         return developerRepository.findById(developerId)
                 .orElseThrow(() -> new DeveloperNotFoundException(developerId));
+    }
+
+    private ExperienceLevel convertToExperienceLevel(String experienceLevel) {
+        try {
+            return ExperienceLevel.valueOf(experienceLevel.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Nível de experiência inválido: " + experienceLevel);
+        }
     }
 }
