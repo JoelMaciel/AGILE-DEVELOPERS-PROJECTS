@@ -12,12 +12,15 @@ import com.joelmaciel.agiledevprojects.domain.services.CompanyService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
-import java.time.OffsetDateTime;
+import java.util.Collections;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -34,6 +37,54 @@ class ProjectServiceImplTest {
     private ProjectRepository projectRepository;
     @InjectMocks
     private ProjectServiceImpl projectService;
+
+    @Test
+    @DisplayName("Given name and status, when finding projects, then return Page<ProjectDTO>")
+    void givenNameAndStatus_whenFindingProjects_thenReturnPageOfProjectDTO() {
+        String name = "Sample";
+        String status = "IN_PROGRESS";
+        PageRequest pageable = PageRequest.of(0, 10);
+
+        when(projectRepository.findByNameContaining(pageable, name))
+                .thenReturn(new PageImpl<>(Collections.singletonList(getMockProject())));
+
+        when(projectRepository.findByStatus(pageable, ProjectStatus.valueOf(status)))
+                .thenReturn(new PageImpl<>(Collections.singletonList(getMockProject())));
+
+        Page<ProjectDTO> resultByName = projectService.findAll(pageable, name, null);
+        Page<ProjectDTO> resultByStatus = projectService.findAll(pageable, null, status);
+
+        assertNotNull(resultByName);
+        assertEquals(1, resultByName.getSize());
+
+        assertNotNull(resultByStatus);
+        assertEquals(1, resultByStatus.getSize());
+
+        verify(projectRepository, times(1)).findByNameContaining(pageable, name);
+        verify(projectRepository, times(1)).findByStatus(pageable, ProjectStatus.valueOf(status));
+        verify(projectRepository, never()).findAll(pageable);
+    }
+
+    @Test
+    @DisplayName("Given null name and status, when finding projects, then return Page<ProjectDTO>")
+    void givenNullNameAndStatus_whenFindingProjects_thenReturnPageOfProjectDTO() {
+        String name = null;
+        String status = null;
+        PageRequest pageable = PageRequest.of(0, 10);
+
+        when(projectRepository.findAll(pageable)).thenReturn(
+                new PageImpl<>(Collections.singletonList(getMockProject()))
+        );
+
+        Page<ProjectDTO> projectDTOPage = projectService.findAll(pageable, name, status);
+
+        assertNotNull(projectDTOPage);
+        assertEquals(1, projectDTOPage.getSize());
+
+        verify(projectRepository, times(1)).findAll(any(Pageable.class));
+        verify(projectRepository, never()).findByNameContaining(any(Pageable.class), any());
+        verify(projectRepository, never()).findByStatus(any(Pageable.class), any());
+    }
 
     @Test
     @DisplayName("Given valid ProjectRequest, when saving a project, then return ProjectDTO successfully")
@@ -143,6 +194,7 @@ class ProjectServiceImplTest {
                 .projectId(1L)
                 .name("Sample Project")
                 .status(ProjectStatus.IN_PROGRESS)
+                .company(getMockCompany())
                 .build();
     }
 
