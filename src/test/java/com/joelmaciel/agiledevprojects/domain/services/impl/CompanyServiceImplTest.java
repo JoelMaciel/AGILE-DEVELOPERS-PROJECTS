@@ -134,7 +134,6 @@ class CompanyServiceImplTest {
         assertNotNull(companyDTO);
         assertEquals(company.getName(), companyDTO.getName());
         assertEquals(company.getCreationDate(), companyDTO.getCreationDate());
-
     }
 
     @DisplayName("Given an invalid CompanyId, when finding a company, then a CompanyNotFoundException is thrown")
@@ -155,21 +154,17 @@ class CompanyServiceImplTest {
     @DisplayName("Given a valid companyId, when deleting a company, then it should delete successfully")
     void givenValidCompanyId_whenDeletingCompany_thenDeleteSuccessfully() {
         Company company = getMockCompany();
-
         when(companyRepository.findById(company.getCompanyId())).thenReturn(Optional.of(company));
 
         assertDoesNotThrow(() -> companyService.delete(company.getCompanyId()));
         verify(companyRepository, times(1)).findById(company.getCompanyId());
         verify(companyRepository, times(1)).delete(company);
-
     }
-
 
     @Test
     @DisplayName("Given an invalid companyId, when deleting a company, then throw CompanyNotFoundException")
     void givenInvalidCompanyId_whenDeletingCompany_thenThrowCompanyNotFoundException() {
         Long companyId = 999L;
-
         when(companyRepository.findById(companyId)).thenReturn(Optional.empty());
 
         CompanyNotFoundException exception = assertThrows(
@@ -179,7 +174,6 @@ class CompanyServiceImplTest {
         assertEquals(CompanyServiceImplTest.COMPANY_NOT_FOUND, exception.getMessage());
         verify(companyRepository, times(1)).findById(companyId);
         verify(companyRepository, never()).delete(any(Company.class));
-
     }
 
     private Company getMockCompany() {
@@ -217,5 +211,4 @@ class CompanyServiceImplTest {
                 .creationDate(company.getCreationDate())
                 .build();
     }
-
 }
