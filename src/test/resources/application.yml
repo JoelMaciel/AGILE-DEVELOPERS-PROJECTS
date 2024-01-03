@@ -1,0 +1,16 @@
+
+spring:
+  application:
+    name: AGILY_DEV_PROJECTS
+  datasource:
+    drive-class-name: org.h2.Driver
+    url: jdbc:h2:~/testdb;DB_CLOSE_ON_EXIST=FALSE
+    username: sa
+    password:
+  flyway:
+    locations: classpath:db/migration
+    baselineOnMigrate: true
+
+
+
+
