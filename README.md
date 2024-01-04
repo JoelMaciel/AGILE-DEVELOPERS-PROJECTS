@@ -60,3 +60,6 @@
 
 ### Command to run Jacoco
 - mvn clean install jacoco:report
+
+### Image of project
+https://hub.docker.com/repository/docker/joel37/agile-dev-projects/general
