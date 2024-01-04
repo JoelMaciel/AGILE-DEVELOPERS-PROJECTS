@@ -24,7 +24,7 @@ jobs:
         cache: maven
         
     - name: Build application jar
-      working-directory: ./AgileDevProjects/AgileDevProjects
+      working-directory: ./AgileDevProjects
       run: mvn clean package
 
     - name: Docker compose build
