@@ -24,11 +24,11 @@ jobs:
         cache: maven
         
     - name: Build application jar
-      working-directory: AgileDevProjects/AgileDevProjects
+      working-directory: .
       run: mvn clean package
 
     - name: Docker compose build
-      working-directory: AgileDevProjects/AgileDevProjects
+      working-directory: .
       run: docker compose build
 
     - name: Push to Docker
