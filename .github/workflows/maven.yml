@@ -28,7 +28,7 @@ jobs:
       run: mvn clean package
 
     - name: Docker compose build
-      working-directory: ./AgileDevProjects
+      working-directory: .
       run: docker compose build
 
     - name: Push to Docker
