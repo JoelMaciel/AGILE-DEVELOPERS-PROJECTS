@@ -9,7 +9,7 @@ services:
       TZ: America/Sao_Paulo
       MYSQL_ROOT_PASSWORD: root
       MYSQL_USER: docker
-      MYSQL_PASSWORD: root
+      MYSQL_PASSWORD: rootroot
       MYSQL_DATABASE: agiledev
       MYSQL_ROOT_HOST: '%'
       MYSQL_TCP_PORT: 3307
@@ -27,7 +27,7 @@ services:
       TZ: America/Sao_Paulo
       SPRING.DATASOURCE.URL: jdbc:mysql://${DB_HOST:-db}:3307/agile_dev?createDatabaseIfNotExist=true&serverTimezone=UTC
       SPRING.DATASOURCE.USERNAME: root
-      SPRING.DATASOURCE.PASSWORD: root
+      SPRING.DATASOURCE.PASSWORD: rootroot
     ports:
       - 8080:8080
     command: mvn spring-boot:run
