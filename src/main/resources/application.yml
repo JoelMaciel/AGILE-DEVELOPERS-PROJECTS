@@ -6,7 +6,7 @@ spring:
   application:
     name: AGILY_DEV_PROJECTS
   datasource:
-    url: jdbc:mysql://${DB_HOST:localhost}:3306/agile_dev?createDatabaseIfNotExist=true&serverTimezone=UTC
+    url: jdbc:mysql://${DB_HOST:localhost}:3306/agiledev?createDatabaseIfNotExist=true&serverTimezone=UTC
     username: ${DB_USERNAME:root}
     password: ${DB_PASSWORD:root}
   flyway:
