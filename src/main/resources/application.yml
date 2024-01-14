@@ -1,14 +1,14 @@
 
 server:
-  port: 8080
+  port: 80
 
 spring:
   application:
     name: AGILY_DEV_PROJECTS
   datasource:
-    url: jdbc:mysql://${DB_HOST:localhost}:3306/agiledev?createDatabaseIfNotExist=true&serverTimezone=UTC
-    username: ${DB_USERNAME:root}
-    password: ${DB_PASSWORD:root}
+    url: jdbc:mysql://${DB_HOST:localhost}:3306/agile_dev?createDatabaseIfNotExist=true&serverTimezone=UTC
+    username: ${DB_USERNAME:docker}
+    password: ${DB_PASSWORD:rootroot}
   flyway:
     locations: classpath:db/migration,classpath:db/testdata
     baselineOnMigrate: true
